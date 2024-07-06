@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DELPOYPATH=home/tapenbox/api-cashbtn
+    - /bin/cp index.js $DEPLOYPATH
+    - /bin/cp package.json $DEPLOYPATh
