@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "build": "babel index.js -d dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Bryan Sharpley",
@@ -18,5 +19,10 @@
     "bignumber.js": "^9.1.2",
     "express": "^4.19.2",
     "nodemon": "^3.1.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.7",
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7"
   }
 }
