@@ -26,7 +26,7 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 app.use(express.json());
 
 //Start the server
-const PORT = 3000;
+const PORT = 0;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
