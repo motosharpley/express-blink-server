@@ -1,16 +1,14 @@
 // @ts-check
 import express from 'express';
-// Removed unused import 'links' from 'express/lib/response'
-import { createTransfer } from '@solana/pay';
+// import { createTransfer } from '@solana/pay';
 import {
   PublicKey,
-  Transaction,
   Connection,
   Keypair,
   VersionedTransaction,
   TransactionMessage,
 } from '@solana/web3.js';
-import BigNumber from 'bignumber.js';
+// import BigNumber from 'bignumber.js';
 import {
   getAssociatedTokenAddress,
   getAccount,
@@ -20,7 +18,10 @@ import {
 
 //Initialize the app
 const app = express();
-const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+const connection = new Connection(
+  'https://soft-weathered-valley.solana-devnet.quiknode.pro/968177985cf58861c3fd978967b5c529d7b05cb7/',
+  'confirmed'
+);
 //Use JSON middleware to parse JSON request bodies
 app.use(express.json());
 
