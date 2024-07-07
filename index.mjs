@@ -1,5 +1,4 @@
 // @ts-check
-// @ts-check
 import express from 'express';
 // Removed unused import 'links' from 'express/lib/response'
 import { createTransfer } from '@solana/pay';
