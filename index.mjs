@@ -61,10 +61,10 @@ app.post('/pay', async (req, res) => {
   );
 
   async function createSplTransferIx(sender, connection) {
-    if (!sender) throw new Error('missing sender');
-    if (!connection) throw new Error('missing connection');
-    const senderInfo = await connection.getAccountInfo(sender);
-    if (!senderInfo) throw new Error('sender not found');
+    // if (!sender) throw new Error('missing sender');
+    // if (!connection) throw new Error('missing connection');
+    // const senderInfo = await connection.getAccountInfo(sender);
+    // if (!senderInfo) throw new Error('sender not found');
 
     // Get the sender's ATA and check that the account exists and can send tokens
     const senderATA = await getAssociatedTokenAddress(splToken, sender);
@@ -116,7 +116,7 @@ app.post('/pay', async (req, res) => {
   }
 
   // create spl transfer instruction
-  const splTransferIx = await createSplTransferIx(sender, connection);
+  const splTransferIx = await createSplTransferIx(accountField, connection);
   const blockhash = await connection.getLatestBlockhash();
 
   // create the transaction
