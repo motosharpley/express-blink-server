@@ -62,6 +62,7 @@ app.post('/pay', async (req, res) => {
 
   async function createSplTransferIx(sender, connection) {
     const senderInfo = await connection.getAccountInfo(sender);
+    if (senderInfo) console.log('sender account exists', senderInfo);
     if (!senderInfo) throw new Error('sender not found');
 
     // Get the sender's ATA and check that the account exists and can send tokens
