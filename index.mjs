@@ -88,7 +88,7 @@ app.post('/pay', async (req, res) => {
 
     // You should always calculate the order total on the server to prevent
     // people from directly manipulating the amount on the client
-    let amount = 10;
+    let amount = 10000000;
 
     // Check that the sender has enough tokens
     const tokens = BigInt(String(amount));
