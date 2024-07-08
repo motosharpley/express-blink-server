@@ -26,7 +26,7 @@ const connection = new Connection(
 app.use(express.json());
 
 //Start the server
-const PORT = 0;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
@@ -116,7 +116,7 @@ app.post('/pay', async (req, res) => {
   }
 
   // create spl transfer instruction
-  const splTransferIx = await createSplTransferIx(accountField, connection);
+  const splTransferIx = await createSplTransferIx(sender, connection);
   const blockhash = await connection.getLatestBlockhash();
 
   // create the transaction
