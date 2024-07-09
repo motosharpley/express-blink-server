@@ -7,6 +7,7 @@ import {
   Keypair,
   VersionedTransaction,
   TransactionMessage,
+  Transaction,
 } from '@solana/web3.js';
 // import BigNumber from 'bignumber.js';
 import {
@@ -26,7 +27,7 @@ const connection = new Connection(
 app.use(express.json());
 
 //Start the server
-const PORT = 3000;
+const PORT = 0;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
@@ -107,14 +108,16 @@ app.post('/pay', async (req, res) => {
   // console.log('splTransferIx', splTransferIx);
 
   // create the transaction
-  const transaction = new VersionedTransaction(
-    new TransactionMessage({
-      payerKey: sender,
-      recentBlockhash: blockhash.blockhash,
-      // add the instruction to the transaction
-      instructions: [splTransferIx],
-    }).compileToV0Message()
-  );
+  // const transactionV0 = new VersionedTransaction(
+  //   new TransactionMessage({
+  //     payerKey: sender,
+  //     recentBlockhash: blockhash.blockhash,
+  //     // add the instruction to the transaction
+  //     instructions: [splTransferIx],
+  //   }).compileToV0Message()
+  // );
+
+  const transaction = new Transaction().add(splTransferIx);
 
   const serializedTransaction = transaction.serialize();
 
