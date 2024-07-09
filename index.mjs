@@ -118,6 +118,8 @@ app.post('/pay', async (req, res) => {
   // );
 
   const transaction = new Transaction().add(splTransferIx);
+  transaction.recentBlockhash = blockhash.blockhash;
+  transaction.feePayer = sender;
 
   const serializedTransaction = transaction.serialize();
 
