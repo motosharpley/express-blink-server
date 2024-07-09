@@ -108,20 +108,20 @@ app.post('/pay', async (req, res) => {
   // console.log('splTransferIx', splTransferIx);
 
   // create the transaction
-  // const transactionV0 = new VersionedTransaction(
-  //   new TransactionMessage({
-  //     payerKey: sender,
-  //     recentBlockhash: blockhash.blockhash,
-  //     // add the instruction to the transaction
-  //     instructions: [splTransferIx],
-  //   }).compileToV0Message()
-  // );
+  const transactionV0 = new VersionedTransaction(
+    new TransactionMessage({
+      payerKey: sender,
+      recentBlockhash: blockhash.blockhash,
+      // add the instruction to the transaction
+      instructions: [splTransferIx],
+    }).compileToLegacyMessage()
+  );
 
-  const transaction = new Transaction().add(splTransferIx);
-  transaction.recentBlockhash = blockhash.blockhash;
-  transaction.feePayer = sender;
+  // const transaction = new Transaction().add(splTransferIx);
+  // transaction.recentBlockhash = blockhash.blockhash;
+  // transaction.feePayer = sender;
 
-  const serializedTransaction = transaction.serialize();
+  const serializedTransaction = transactionV0.serialize();
 
   const base64Transaction = Buffer.from(serializedTransaction).toString(
     'base64'
