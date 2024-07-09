@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
 
 //Define a Solana Pay Transaction Request GET endpoint
 app.get('/pay', (req, res) => {
-  const label = 'Hello, Solana Pay!';
+  const label = 'CashBTN!';
   const icon = '🌍';
   res.status(200).json({
     label,
@@ -61,35 +61,21 @@ app.post('/pay', async (req, res) => {
   );
 
   async function createSplTransferIx(sender, connection) {
-    // if (!sender) throw new Error('missing sender');
-    // if (!connection) throw new Error('missing connection');
-    // const senderInfo = await connection.getAccountInfo(sender);
-    // if (!senderInfo) throw new Error('sender not found');
-
     // Get the sender's ATA and check that the account exists and can send tokens
     const senderATA = await getAssociatedTokenAddress(splToken, sender);
     const senderAccount = await getAccount(connection, senderATA);
     if (!senderAccount.isInitialized) throw new Error('sender not initialized');
     if (senderAccount.isFrozen) throw new Error('sender frozen');
+    // console.log('senderAccount', senderAccount);
 
-    // Get the merchant's ATA and check that the account exists and can receive tokens
-    const merchantATA = await getAssociatedTokenAddress(
-      splToken,
-      MERCHANT_WALLET
+    const merchantATA = new PublicKey(
+      '6Y9VSMaRYoRLsWeRJiibddfR6CGhnkYvRPnUa2LqTUAS'
     );
-    const merchantAccount = await getAccount(connection, merchantATA);
-    if (!merchantAccount.isInitialized)
-      throw new Error('merchant not initialized');
-    if (merchantAccount.isFrozen) throw new Error('merchant frozen');
-
     // Check that the token provided is an initialized mint
     const mint = await getMint(connection, splToken);
     if (!mint.isInitialized) throw new Error('mint not initialized');
 
-    // You should always calculate the order total on the server to prevent
-    // people from directly manipulating the amount on the client
     let amount = 10000000;
-
     // Check that the sender has enough tokens
     const tokens = BigInt(String(amount));
     if (tokens > senderAccount.amount) throw new Error('insufficient funds');
@@ -118,6 +104,7 @@ app.post('/pay', async (req, res) => {
   // create spl transfer instruction
   const splTransferIx = await createSplTransferIx(sender, connection);
   const blockhash = await connection.getLatestBlockhash();
+  // console.log('splTransferIx', splTransferIx);
 
   // create the transaction
   const transaction = new VersionedTransaction(
