@@ -185,7 +185,7 @@ app.get('/actions/vote', (req, res) => {
 // Define a Solana Actions POST endpoint
 app.post('/actions/vote', async (req, res) => {
   // // Account provided in the transaction req.body by the wallet.
-  const accountField = await req.body?.account;
+  // const accountField = req.body?.account;
   // if (!accountField) throw new Error('missing account');
   // if (typeof accountField !== 'string') throw new Error('invalid account');
   // const sender = new PublicKey(accountField);
