@@ -258,10 +258,9 @@ app.post('/actions/vote', async (req, res) => {
   // const base64Transaction = Buffer.from(serializedTransaction).toString(
   //   'base64'
   // );
-  const base64Transaction = accountField;
+  const base64Transaction = 'base64Transaction';
   const message = 'Thank you for your purchase!';
-  res.set(ACTIONS_CORS_HEADERS);
-  res.status(200).json({
+  res.set(ACTIONS_CORS_HEADERS).status(200).json({
     transaction: base64Transaction,
     message: message,
   });
