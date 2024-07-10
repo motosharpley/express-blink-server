@@ -16,6 +16,7 @@ import {
   getMint,
   createTransferCheckedInstruction,
 } from '@solana/spl-token';
+import { ACTIONS_CORS_HEADERS } from '@solana/actions';
 
 //Initialize the app
 const app = express();
@@ -117,10 +118,6 @@ app.post('/pay', async (req, res) => {
     }).compileToLegacyMessage()
   );
 
-  // const transaction = new Transaction().add(splTransferIx);
-  // transaction.recentBlockhash = blockhash.blockhash;
-  // transaction.feePayer = sender;
-
   const serializedTransaction = transactionV0.serialize();
 
   const base64Transaction = Buffer.from(serializedTransaction).toString(
@@ -159,9 +156,11 @@ export interface ActionGetResponse {
 app.get('/actions/vote', (req, res) => {
   const title = 'Hello Solana Actions!';
   const icon = '🌍';
+
+  res.set(ACTIONS_CORS_HEADERS);
   res.status(200).json({
     title: 'GigL Meme Contest',
-    icon: '<url-to-image>',
+    icon: 'https://cashbtn.com/assets/light-purple-cube.png',
     description: 'Vote on the top meme of the week!',
     label: 'Vote',
     links: {
@@ -173,6 +172,10 @@ app.get('/actions/vote', (req, res) => {
         {
           label: 'Vote MEME2', // button text
           href: '/actions/memes/vote?choice=meme2',
+        },
+        {
+          label: 'Send USDC', // button text
+          href: '/actions/vote',
         },
       ],
     },
@@ -190,8 +193,10 @@ app.post('/actions/vote', async (req, res) => {
 
   // TODO base64 encoded transaction
   const base64TX = req.body;
+
+  res.set(ACTIONS_CORS_HEADERS);
   res.status(200).json({
     transaction: base64TX,
-    message: 'Hello, Vote POST request!',
+    message: `Hello, ${accountField} Vote POST request!`,
   });
 });
