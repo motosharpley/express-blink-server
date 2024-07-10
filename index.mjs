@@ -200,3 +200,8 @@ app.post('/actions/vote', async (req, res) => {
     message: `Hello, ${accountField} Vote POST request!`,
   });
 });
+
+app.options('/actions/vote', (req, res) => {
+  res.set(ACTIONS_CORS_HEADERS);
+  res.status(200).send();
+});
