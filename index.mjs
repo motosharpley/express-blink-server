@@ -194,5 +194,5 @@ app.post('/actions/vote', async (req, res) => {
 
 app.options('/actions/vote', (req, res) => {
   res.set(ACTIONS_CORS_HEADERS);
-  res.status(200).send('OK');
+  res.json(null);
 });
