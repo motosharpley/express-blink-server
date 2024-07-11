@@ -16,7 +16,8 @@ import {
   getMint,
   createTransferCheckedInstruction,
 } from '@solana/spl-token';
-import { ACTIONS_CORS_HEADERS } from '@solana/actions';
+// import { ACTIONS_CORS_HEADERS } from '@solana/actions';
+import cors from 'cors';
 
 //Initialize the app
 const app = express();
@@ -26,6 +27,18 @@ const connection = new Connection(
 );
 //Use JSON middleware to parse JSON request bodies
 app.use(express.json());
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Content-Encoding',
+      'Accept-Encoding',
+    ],
+  })
+);
 
 //Start the server
 const PORT = 0;
@@ -34,7 +47,7 @@ app.listen(PORT, () => {
 });
 
 app.get('/', (req, res) => {
-  res.status(200).send('Hello, Blink Server!');
+  res.send('Hello, Blink Server!');
 });
 
 //Define a Solana Pay Transaction Request GET endpoint
@@ -125,10 +138,25 @@ app.post('/pay', async (req, res) => {
   );
   const message = 'Thank you for your purchase!';
 
-  res.status(200).json({
+  res.json({
     transaction: base64Transaction,
     message: message,
   });
+});
+
+// Define a route to serve actions.json rules
+app.get('/actions.json', (req, res) => {
+  res.json({
+    rules: [
+      { pathPattern: '/*', apiPath: '/actions/*' },
+      { pathPattern: '/actions/**', apiPath: '/actions/**' },
+    ],
+  });
+});
+
+// Define a Solana Actions OPTIONS endpoint
+app.options('/actions/*', (req, res) => {
+  res.sendStatus(200);
 });
 
 /*
@@ -153,26 +181,17 @@ export interface ActionGetResponse {
 }
 */
 
-app.get('/actions/vote', (req, res) => {
-  res.set(ACTIONS_CORS_HEADERS);
-  res.status(200).json({
+app.get('/actions/donate', (req, res) => {
+  res.json({
     title: 'GigL Meme Contest',
     icon: 'https://cashbtn.com/assets/light-purple-cube.png',
-    description: 'Vote on the top meme of the week!',
-    label: 'Vote',
+    description: 'Donate 10 USDC!',
+    label: 'Donate USDC',
     links: {
       actions: [
-        // {
-        //   label: 'Vote MEME1', // button text
-        //   href: '/actions/memes/vote?choice=meme1',
-        // },
-        // {
-        //   label: 'Vote MEME2', // button text
-        //   href: '/actions/memes/vote?choice=meme2',
-        // },
         {
-          label: 'Send USDC', // button text
-          href: '/actions/vote',
+          label: 'Send 10 USDC', // button text
+          href: '/actions/donate', // action endpoint
         },
       ],
     },
@@ -180,7 +199,7 @@ app.get('/actions/vote', (req, res) => {
 });
 
 // Define a Solana Actions POST endpoint
-app.post('/actions/vote', async (req, res) => {
+app.post('/actions/donate', async (req, res) => {
   // Account provided in the transaction req.body by the wallet.
   const accountField = req.body?.account;
   if (!accountField) throw new Error('missing account');
@@ -200,7 +219,6 @@ app.post('/actions/vote', async (req, res) => {
     const senderAccount = await getAccount(connection, senderATA);
     if (!senderAccount.isInitialized) throw new Error('sender not initialized');
     if (senderAccount.isFrozen) throw new Error('sender frozen');
-    // console.log('senderAccount', senderAccount);
 
     const merchantATA = new PublicKey(
       '6Y9VSMaRYoRLsWeRJiibddfR6CGhnkYvRPnUa2LqTUAS'
@@ -238,31 +256,24 @@ app.post('/actions/vote', async (req, res) => {
   // create spl transfer instruction
   const splTransferIx = await createSplTransferIx(sender, connection);
   const blockhash = await connection.getLatestBlockhash();
-  // console.log('splTransferIx', splTransferIx);
 
   // create the transaction
   const transactionV0 = new VersionedTransaction(
     new TransactionMessage({
       payerKey: sender,
       recentBlockhash: blockhash.blockhash,
-      // add the instruction to the transaction
       instructions: [splTransferIx],
     }).compileToLegacyMessage()
   );
 
   const serializedTransaction = transactionV0.serialize();
-
   const base64Transaction = Buffer.from(serializedTransaction).toString(
     'base64'
   );
-  const message = 'Thank you for your purchase!';
+  const message = 'Thank you for your donation!';
 
-  res.set(ACTIONS_CORS_HEADERS).status(200).json({
+  res.json({
     transaction: base64Transaction,
     message: message,
   });
-});
-
-app.options('/actions/vote', (req, res) => {
-  res.set(ACTIONS_CORS_HEADERS).sendStatus(200);
 });
