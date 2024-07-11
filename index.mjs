@@ -46,6 +46,14 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
+// enable CORS for all routes
+app.options('*', cors());
+
+// // Define a Solana Actions OPTIONS endpoint
+// app.options('/actions/*', (req, res) => {
+//   res.sendStatus(200);
+// });
+
 app.get('/', (req, res) => {
   res.send('Hello, Blink Server!');
 });
@@ -152,11 +160,6 @@ app.get('/actions.json', (req, res) => {
       { pathPattern: '/actions/**', apiPath: '/actions/**' },
     ],
   });
-});
-
-// Define a Solana Actions OPTIONS endpoint
-app.options('/actions/*', (req, res) => {
-  res.sendStatus(200);
 });
 
 /*
