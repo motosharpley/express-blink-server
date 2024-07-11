@@ -154,9 +154,6 @@ export interface ActionGetResponse {
 */
 
 app.get('/actions/vote', (req, res) => {
-  const title = 'Hello Solana Actions!';
-  const icon = '🌍';
-
   res.set(ACTIONS_CORS_HEADERS);
   res.status(200).json({
     title: 'GigL Meme Contest',
@@ -194,5 +191,5 @@ app.post('/actions/vote', async (req, res) => {
 
 app.options('/actions/vote', (req, res) => {
   res.set(ACTIONS_CORS_HEADERS);
-  res.json({ null: null });
+  res.sendStatus(200);
 });
